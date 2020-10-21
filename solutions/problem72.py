@@ -4,6 +4,12 @@ Created on Tue Oct 20 22:56:35 2020
 
 @author: tjcombs
 
+Problem 72: Counting fractions
+
+Problem statement can be found here:
+    
+    https://projecteuler.net/problem=72
+
 """
 
 import numpy as np
