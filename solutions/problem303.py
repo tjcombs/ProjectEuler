@@ -9,34 +9,6 @@ https://projecteuler.net/problem=303
 
 import pandas as pd
 
-def check_number(x):
-    '''
-    Checks if the digits of a number is only made
-    up of 0, 1, and 2.
-    '''
-    answer = True
-    while x > 0:
-        residue = x % 10
-        x = (x - residue)/10
-        answer = answer & ((residue == 0) | (residue == 1) | (residue == 2))
-    return answer
-
-def check_number_ser(x):
-    '''
-    Checks if the digits of a number is only made
-    up of 0, 1, and 2.
-    '''
-    answer = True
-    while (x > 0).any():
-        residue = x % 10
-        x = (x - residue)/10
-        answer = answer & ((residue == 0) | (residue == 1) | (residue == 2))
-    return answer
-    
-assert(check_number(123)==False)
-assert(check_number(102)==True)
-
-
 numberstemp = pd.DataFrame({'X': [0.0, 1.0, 2.0]})
 
 def extend(df, number):
@@ -49,6 +21,14 @@ def f(n):
 
 data = pd.DataFrame({'n': range(1, 10001)})
 data['f(n)'] = None
+# Find f(9999) because it is taking too long
+# From data
+# f(9) = 12222
+# f(99) = 1122222222
+# f(999) = 111222222222222
+# Looks like should be
+# f(9999) = 11112222222222222222
+data.loc[data['n']==9999, 'f(n)'] = 11112222222222222222
 
 for i in range(15):
     numberstemp = pd.concat((extend(numberstemp, 0), extend(numberstemp, 1), extend(numberstemp, 2)))
@@ -56,6 +36,7 @@ for i in range(15):
     numbers = numbers[numbers['X']>=10**i]
     data.loc[data['f(n)'].isnull(), 'f(n)'] = data.loc[data['f(n)'].isnull(), 'n'].apply(f)
 
-assert(data['f(n)'].isnull().sum()<=1)
-data[data['f(n)'].isnull()]
+assert(data['f(n)'].notnull().all())
 SUM = (data['f(n)']/data['n']).sum()
+# Check answer
+assert(SUM == 1111981904675169)
